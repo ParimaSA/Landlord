@@ -635,82 +635,82 @@
 },
 {
   "model": "landlord.employee",
-  "pk": 50,
+  "pk": 58,
   "fields": {
-    "apartment": 1,
-    "name": "Somsri",
+    "apartment": 6,
+    "name": "Alan",
+    "salary": 20000,
+    "occupation": "Juristic Person"
+  }
+},
+{
+  "model": "landlord.employee",
+  "pk": 59,
+  "fields": {
+    "apartment": 6,
+    "name": "Dawn",
+    "salary": 12000,
+    "occupation": "Gardener"
+  }
+},
+{
+  "model": "landlord.employee",
+  "pk": 60,
+  "fields": {
+    "apartment": 7,
+    "name": "Jarad",
+    "salary": 23000,
+    "occupation": "Juristic Person"
+  }
+},
+{
+  "model": "landlord.employee",
+  "pk": 61,
+  "fields": {
+    "apartment": 7,
+    "name": "Mitch",
+    "salary": 12000,
+    "occupation": "Gardener"
+  }
+},
+{
+  "model": "landlord.employee",
+  "pk": 62,
+  "fields": {
+    "apartment": 8,
+    "name": "Natasha",
+    "salary": 20000,
+    "occupation": "Juristic Person"
+  }
+},
+{
+  "model": "landlord.employee",
+  "pk": 63,
+  "fields": {
+    "apartment": 8,
+    "name": "Nathan",
+    "salary": 12000,
+    "occupation": "Gardener"
+  }
+},
+{
+  "model": "landlord.employee",
+  "pk": 64,
+  "fields": {
+    "apartment": 9,
+    "name": "Nora",
+    "salary": 24000,
+    "occupation": "Juristic Person"
+  }
+},
+{
+  "model": "landlord.employee",
+  "pk": 65,
+  "fields": {
+    "apartment": 9,
+    "name": "Pascal",
     "salary": 15000,
     "occupation": "Gardener"
-  }
-},
-{
-  "model": "landlord.employee",
-  "pk": 51,
-  "fields": {
-    "apartment": 2,
-    "name": "Anan",
-    "salary": 12000,
-    "occupation": "Gardener"
-  }
-},
-{
-  "model": "landlord.employee",
-  "pk": 52,
-  "fields": {
-    "apartment": 3,
-    "name": "Aladin",
-    "salary": 10000,
-    "occupation": "Gardener"
-  }
-},
-{
-  "model": "landlord.employee",
-  "pk": 53,
-  "fields": {
-    "apartment": 5,
-    "name": "Jake",
-    "salary": 12000,
-    "occupation": "Gardener"
-  }
-},
-{
-  "model": "landlord.employee",
-  "pk": 54,
-  "fields": {
-    "apartment": 1,
-    "name": "Daoduang",
-    "salary": 20000,
-    "occupation": "Juristic Person"
-  }
-},
-{
-  "model": "landlord.employee",
-  "pk": 55,
-  "fields": {
-    "apartment": 2,
-    "name": "Wachira",
-    "salary": 21000,
-    "occupation": "Juristic Person"
-  }
-},
-{
-  "model": "landlord.employee",
-  "pk": 56,
-  "fields": {
-    "apartment": 3,
-    "name": "Anuchit",
-    "salary": 19000,
-    "occupation": "Juristic Person"
-  }
-},
-{
-  "model": "landlord.employee",
-  "pk": 57,
-  "fields": {
-    "apartment": 5,
-    "name": "Ploytron",
-    "salary": 20000,
-    "occupation": "Juristic Person"
   }
 },
 {

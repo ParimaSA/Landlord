@@ -1,0 +1,83 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+
+# Django migrations
+**/migrations/
+
+# If you are using SQLite3 as your database
+*.sqlite3
+
+# ENV files
+.env
+.env.*
+
+# Local development environment
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Environment folders
+venv/
+env/
+__pycache__/
+
+# Node modules (if you have any frontend dependencies in your Django project)
+node_modules/
+
+# Static and media files (if they are generated locally)
+staticfiles/
+media/
+
+# Coverage reports
+htmlcov/
+.coverage
+*.cover
+*.py,cover
+.coverage.*
+
+# Test and temporary files
+*.mo
+*.cover
+*.swp
+*~
+
+# PyInstaller
+# Usually these files are written by a python script from the installation process
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pipenv
+Pipfile.lock
+
+# pytest
+.pytest_cache/
+.cache/
+.tox/
+
+# Other
+*.log
+local_settings.py

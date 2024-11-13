@@ -19,10 +19,10 @@
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link font-weight-bold" style="color: white;" href="{% url 'landlord:employee' %}">Employee<span class="sr-only">(current)</span></a>
+                <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:employee' %}">Employee<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:tenant' %}">Tenant</a>
+              <a class="nav-link font-weight-bold" style="color: white;" href="{% url 'landlord:tenant' %}">Tenant</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Parking</a>
@@ -45,37 +45,33 @@
   <br>
   <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 20px; margin-right: 50px; ">
       <h1 class="font-weight-bold" style="margin-left: 50px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 400 612">
-              <path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM128 256a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM80 432c0-44.2 35.8-80 80-80l64 0c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16L96 448c-8.8 0-16-7.2-16-16z"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 14 16">
+              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
           </svg>
-          Employee
+          Tenant
       </h1>
-      <button type="button" data-toggle="modal" data-target="#exampleModal" style="background: #fffcaf; color: black; margin-right: 20px; border-radius: 10px; padding:10px;">+ Add Employee</button>
+      <button type="button" data-toggle="modal" data-target="#exampleModal" style="background: #fffcaf; color: black; margin-right: 20px; border-radius: 10px; padding:10px;">+ Add Tenant</button>
   </div>
 
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Employee</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Add Tenant</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form method="post" action="{% url 'landlord:add_employee' %}" id="employeeForm" onsubmit="return validateForm()">
+            <form method="post" action="{% url 'landlord:add_tenant' %}" id="tenantForm" onsubmit="return validateForm()">
               {% csrf_token %}
               <div class="form-group">
-                <label for="employee_name" class="col-form-label">Name:</label>
-                <input type="text" class="form-control" id="employee_name" name="employee_name">
+                <label for="tenant_name" class="col-form-label">Name:</label>
+                <input type="text" class="form-control" id="tenant_name" name="tenant_name">
               </div>
               <div class="form-group">
-                <label for="employee_salary" class="col-form-label">Salary:</label>
-                <input type="number" class="form-control" id="employee_salary" name="employee_salary">
-              </div>
-              <div class="form-group">
-                <label for="employee_occupation" class="col-form-label">Occupation:</label>
-                <input type="text" class="form-control" id="employee_occupation" name="employee_occupation">
+                <label for="tenant_contact" class="col-form-label">Contact Info:</label>
+                <input type="text" class="form-control" id="tenant_contact" name="tenant_contact">
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -84,11 +80,10 @@
             </form>
             <script>
                 function validateForm() {
-                    const name = document.getElementById("employee_name").value;
-                    const salary = document.getElementById("employee_salary").value;
-                    const occupation = document.getElementById("employee_occupation").value;
+                    const name = document.getElementById("tenant_name").value;
+                    const contact = document.getElementById("tenant_contact").value;
 
-                    if (!name || !salary || !occupation) {
+                    if (!name || !contact) {
                         alert("Please fill in all fields.");
                         return false; // Prevent form submission
                     }
@@ -110,97 +105,59 @@
             <!-- Name Filter -->
             <label for="filter" style="margin-top: 15px;">Filter by name:</label>
             <input type="text" id="filter" name="filter" value="{{ request.GET.filter }}" placeholder="Enter name">
-            <!--Occupation Filter -->
-            <label for="occupation">Filter by occupation:</label>
-            <select id="occupation" name="occupation" class="form-select" style="height: 50px;">
-            <option value="">All Occupation</option>
-                {% for occupation in occupations %}
-                <option value="{{ occupation }}"
-                    {% if occupation == current_occ %}
-                        selected
-                    {% endif %}>
-                {{ occupation }}
-                 </option>
-                {% endfor %}
-             </select>
-            <!--Salary Filter -->
-            <label for="salary" class="form-label" style="margin-top: 15px;">Filter by salary</label>
-            <input type="range" class="form-range" min="{{ min_salary }}" max="{{ max_salary }}" step="100" id="salary" name="salary" value="{{ current_sal }}">
-            <div class="d-flex justify-content-between">
-                <span>{{ min_salary }}</span>
-                <span id="current-value">Current: {{ current_sal }}</span>
-                <span>{{ max_salary }}</span>
-            </div>
-            <script>
-                // Get the range input element and the display element for current value
-                const rangeInput = document.getElementById('salary');
-                const currentValueElement = document.getElementById('current-value');
-
-                // Update the displayed current value when the range slider value changes
-                rangeInput.addEventListener('input', function() {
-                    const currentValue = rangeInput.value;
-                    currentValueElement.textContent = "Current: " + currentValue;
-                });
-            </script>
             <button class="filter-button" type="submit" style="margin-top: 20px; background: #a6e2ff; color: black;">Apply Filter</button>
         </form>
     </div>
 
     <!-- Middle Section: Data Table -->
     <div class="table-section" style="overflow: hidden;">
-        <h2>Employee Data</h2>
+        <h2>Tenant Data</h2>
         <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
         <table class="table" style="position: relative; border-collapse: collapse;">
           <thead style="position: sticky; top: 0; background: white; z-index: 1;">
             <tr>
               <th scope="col">Name</th>
-              <th scope="col">Salary</th>
-              <th scope="col">Occupation</th>
+              <th scope="col">Contact Info</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            {% for emp in employee %}
+            {% for tenant in tenants %}
               <tr>
-                <td>{{ emp.name }}</td>
-                <td>{{ emp.salary }}</td>
-                <td>{{ emp.occupation }}</td>
+                <td>{{ tenant.name }}</td>
+                <td>{{ tenant.contact_info }}</td>
                 <td>
-                    <a href="{% url 'landlord:delete_employee' emp.id %}" class="btn btn-primary" style="background: #fffcaf; color: black; border: 1px solid gray; border-radius: 3px; padding:7px">
+                    <a href="{% url 'landlord:delete_tenant' tenant.id %}" class="btn btn-primary" style="background: #fffcaf; color: black; border: 1px solid gray; border-radius: 3px; padding:7px">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                           <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                           <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                         </svg>
                     </a>
-                    <button type="button" data-toggle="modal" data-target="#editModal-{{ emp.id }}" style="background: #fffcaf; border: 1px solid gray; color: black; border-radius: 3px;">
+                    <button type="button" data-toggle="modal" data-target="#editModal-{{ tenant.id }}" style="background: #fffcaf; border: 1px solid gray; color: black; border-radius: 3px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                         </svg>
                     </button>
-                    <div class="modal fade" id="editModal-{{ emp.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="editModal-{{ tenant.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel">Edit Employee</h5>
+                            <h5 class="modal-title" id="editModalLabel">Edit Tenant</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form method="post" action="{% url 'landlord:edit_employee' emp.id %}" id="employeeEdit" onsubmit="return validateEdit()">
+                            <form method="post" action="{% url 'landlord:edit_tenant' tenant.id %}" id="tenantEdit" onsubmit="return validateEdit()">
                               {% csrf_token %}
                               <div class="form-group">
-                                <label for="employee_name" class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" id="new_name" name="new_name" value={{emp.name}}>
+                                <label for="new_name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="new_name" name="new_name" value={{tenant.name}}>
                               </div>
                               <div class="form-group">
-                                <label for="employee_salary" class="col-form-label">Salary:</label>
-                                <input type="number" class="form-control" id="new_salary" name="new_salary" value={{emp.salary}}>
-                              </div>
-                              <div class="form-group">
-                                <label for="employee_occupation" class="col-form-label">Occupation:</label>
-                                <input type="text" class="form-control" id="new_occupation" name="new_occupation" value={{emp.occupation}}>
+                                <label for="new_contact" class="col-form-label">Contact Info:</label>
+                                <input type="text" class="form-control" id="new_contact" name="new_contact" value={{tenant.contact_info}}>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -210,10 +167,9 @@
                             <script>
                                 function validateEdit() {
                                     const name = document.getElementById("new_name").value;
-                                    const salary = document.getElementById("new_salary").value;
-                                    const occupation = document.getElementById("new_occupation").value;
+                                    const contact = document.getElementById("new_contact").value;
 
-                                    if (!name || !salary || !occupation) {
+                                    if (!name || !contact) {
                                         alert("Please fill in all fields.");
                                         return false;
                                     }
@@ -228,7 +184,7 @@
               </tr>
             {% empty %}
               <tr>
-                <td colspan="3">No employees found matching the filter criteria.</td>
+                <td colspan="3">No tenants found matching the filter criteria.</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -240,11 +196,10 @@
     <div class="summary-section">
         <div class="sum-text">
           <h2> Summary </h2>
-          <h3>Number of Employee: {{ num_employee }}</h3>
-          <h3>Total Salary: {{ sum_this_salary }}</h3>
-          <h3>Average Salary: {{ avg_this_salary }}</h3>
-          <h3>Minimum Salary: {{ min_this_salary }}</h3>
-          <h3>Maximum Salary: {{ max_this_salary }}</h3>
+          <h3>Number of tenant: {{ num_tenant }}</h3>
+<!--          <h3>Average Salary: {{ avg_this_salary }}</h3>-->
+<!--          <h3>Minimum Salary: {{ min_this_salary }}</h3>-->
+<!--          <h3>Maximum Salary: {{ max_this_salary }}</h3>-->
         </div>
     </div>
   </div>

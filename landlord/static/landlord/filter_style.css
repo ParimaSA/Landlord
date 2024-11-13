@@ -12,6 +12,7 @@ body {
     width: 100%;
     padding: 20px;
     margin: 30px;
+    max-height: 900px;
 }
 
 .filter-section,
@@ -20,6 +21,7 @@ body {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    background: white;
 }
 
 .filter-section {

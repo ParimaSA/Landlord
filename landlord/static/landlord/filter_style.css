@@ -96,5 +96,29 @@ th {
 
 .sum-text h3 {
     font-size: 20px;
-
 }
+
+.salary-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;  /* Adjust width as needed */
+}
+
+.salary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.salary-item h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.salary-item span {
+    font-size: 18px;
+    font-weight: bold;
+}
+

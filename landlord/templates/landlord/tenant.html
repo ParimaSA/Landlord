@@ -28,7 +28,7 @@
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Parking</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Room</a>
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Room</a>
             </li>
         </ul>
     </div>
@@ -110,7 +110,7 @@
     </div>
 
     <!-- Middle Section: Data Table -->
-    <div class="table-section" style="overflow: hidden;">
+    <div class="table-section table-hover" style="overflow: hidden;">
         <h2>Tenant Data</h2>
         <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
         <table class="table" style="position: relative; border-collapse: collapse;">
@@ -197,9 +197,6 @@
         <div class="sum-text">
           <h2> Summary </h2>
           <h3>Number of tenant: {{ num_tenant }}</h3>
-<!--          <h3>Average Salary: {{ avg_this_salary }}</h3>-->
-<!--          <h3>Minimum Salary: {{ min_this_salary }}</h3>-->
-<!--          <h3>Maximum Salary: {{ max_this_salary }}</h3>-->
         </div>
     </div>
   </div>

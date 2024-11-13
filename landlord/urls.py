@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (detail_page, employee_page, add_employee, delete_employee, edit_employee,
-                    tenant_page, add_tenant, delete_tenant, edit_tenant)
+                    tenant_page, add_tenant, delete_tenant, edit_tenant,
+                    room_page, add_room, delete_room, edit_room)
 
 app_name = "landlord"
 urlpatterns = [
@@ -13,5 +14,9 @@ urlpatterns = [
     path("add_tenant/", add_tenant, name="add_tenant"),
     path("delete_tenant/<int:tenant_id>", delete_tenant, name="delete_tenant"),
     path("edit_tenant/<int:tenant_id>", edit_tenant, name="edit_tenant"),
+    path("room/", room_page, name="room"),
+    path("add_room/", add_room, name="add_room"),
+    path("delete_room/<int:room_id>", delete_room, name="delete_room"),
+    path("edit_room/<int:room_id>", edit_room, name="edit_room"),
 
 ]

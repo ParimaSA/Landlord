@@ -1,3 +1,4 @@
+from multiprocessing.dummy import current_process
 from pyexpat.errors import messages
 
 from django.shortcuts import render, redirect
@@ -6,7 +7,7 @@ from matplotlib.style.core import context
 from numpy.ma.extras import average
 from socks import method
 
-from .models import Employee, Apartment, Room, Tenant
+from .models import Employee, Apartment, Room, Tenant, RoomType
 
 
 def detail_page(request):
@@ -160,5 +161,92 @@ def edit_tenant(request, tenant_id):
 
 
 def room_page(request):
-    room = Room.objects.all()
-    return render(request, "landlord/room.html")
+    condition ={}
+    name_filter = request.GET.get('filter')
+    status_filter = request.GET.get('status')
+    price_filter = request.GET.get('price')
+    if name_filter:
+        condition["number__istartswith"] = name_filter
+    if status_filter:
+        condition["status"] = status_filter
+    if price_filter:
+        condition["price__lt"] = price_filter
+
+    rooms = Room.objects.filter(**condition)
+    room_type = RoomType.objects.all()
+    all_status = Room.objects.values_list('status', flat=True).distinct()
+    min_price = Room.objects.aggregate(Min('price'))['price__min']
+    max_price = Room.objects.aggregate(Max('price'))['price__max']
+    max_price += (100 - (max_price % 100))
+
+    current_price = max_price
+    if price_filter:
+        current_price = price_filter
+
+    average_this_price = 0
+    min_this_price = 0
+    max_this_price = 0
+    sum_this_price = 0
+    if rooms:
+        average_this_price = rooms.aggregate(Avg('price'))['price__avg']
+        min_this_price = rooms.aggregate(Min('price'))['price__min']
+        max_this_price = rooms.aggregate(Max('price'))['price__max']
+        sum_this_price = rooms.aggregate(Sum('price'))['price__sum']
+
+    context = {
+        "rooms": rooms,
+        "room_type": room_type,
+        "min_price": min_price,
+        "max_price": max_price,
+        "current_price": current_price,
+        "avg_this_price": f"{average_this_price:,.2f}",
+        "min_this_price": f"{min_this_price:,.2f}",
+        "max_this_price": f"{max_this_price:,.2f}",
+        "sum_this_price": f"{sum_this_price:,.2f}",
+        'all_status': all_status,
+        'selected_status': status_filter,
+        "num_room": rooms.count(),
+    }
+    return render(request, "landlord/room.html", context=context)
+
+
+def add_room(request):
+    if request.method == "POST":
+        apartment = Apartment.objects.get(landlord=request.user)
+        room_number = request.POST.get("room_number")
+        room_type_id = request.POST.get("type")
+        room_type = RoomType.objects.get(pk=room_type_id)
+        price = request.POST.get("room_price")
+        Room.objects.create(apartment=apartment, number=room_number, room_type=room_type, price=price)
+        return redirect("landlord:room")
+    return redirect("landlord:room")
+
+
+def delete_room(request, room_id):
+    landlord = request.user
+    try:
+        apartment = Apartment.objects.get(landlord=landlord)
+        room = Room.objects.get(pk=room_id, apartment=apartment)
+    except(Room.DoesNotExist):
+        return redirect("landlord:room")
+    room.delete()
+    return redirect("landlord:room")
+
+
+def edit_room(request, room_id):
+    try:
+        room = Room.objects.get(pk=room_id)
+        room_number = request.POST.get("new_number")
+        room_type_id = request.POST.get("new_type")
+        room_type = RoomType.objects.get(pk=room_type_id)
+        price = request.POST.get("new_price")
+    except(Room.DoesNotExist):
+        return redirect("landlord:room")
+    if room_number:
+        room.number = room_number
+    if room_type:
+        room.room_type = room_type
+    if price:
+        room.price = price
+    room.save()
+    return redirect("landlord:room")

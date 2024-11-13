@@ -4,7 +4,7 @@
 
 {% block content %}
   {% load static %}
-  <link rel="stylesheet" href="{% static 'landlord/filter_style.css' %}">
+<link rel="stylesheet" href="{% static 'landlord/filter_style.css' %}" xmlns="http://www.w3.org/1999/html">
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background: #f11f25;">
     <a class="navbar-brand font-weight-bold" href="#" style="color: white;">Landlord</a>
@@ -19,7 +19,7 @@
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link font-weight-bold" style="color: white;" href="{% url 'landlord:employee' %}">Employee<span class="sr-only">(current)</span></a>
+                <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:employee' %}">Employee<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:tenant' %}">Tenant</a>
@@ -28,7 +28,7 @@
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Parking</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Room</a>
+              <a class="nav-link font-weight-bold" style="color: white;" href="{% url 'landlord:room' %}">Room</a>
             </li>
         </ul>
     </div>
@@ -45,37 +45,50 @@
   <br>
   <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 20px; margin-right: 50px; ">
       <h1 class="font-weight-bold" style="margin-left: 50px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="90" viewBox="0 0 400 612">
-              <path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM128 256a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM80 432c0-44.2 35.8-80 80-80l64 0c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16L96 448c-8.8 0-16-7.2-16-16z"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 14 16">
+              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
           </svg>
-          Employee
+          Room
       </h1>
-      <button type="button" data-toggle="modal" data-target="#exampleModal" style="background: #fffcaf; color: black; margin-right: 20px; border-radius: 10px; padding:10px;">+ Add Employee</button>
+      <div style="display: flex; gap: 0px;">
+          <button type="button" data-toggle="modal" data-target="#addModal" style="background: #fffcaf; color: black; margin-right: 20px; border-radius: 10px; padding:10px;">+ Add Room</button>
+          <button type="button" data-toggle="modal" data-target="#typeModal" style="background: #fffcaf; color: black; margin-right: 20px; border-radius: 10px; padding:10px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+              </svg>
+              Room Type
+          </button>
+
+      </div>
   </div>
 
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Employee</h5>
+            <h5 class="modal-title" id="addModalLabel">Add Room</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form method="post" action="{% url 'landlord:add_employee' %}" id="employeeForm" onsubmit="return validateForm()">
+            <form method="post" action="{% url 'landlord:add_room' %}" id="roomForm" onsubmit="return validateForm()">
               {% csrf_token %}
               <div class="form-group">
-                <label for="employee_name" class="col-form-label">Name:</label>
-                <input type="text" class="form-control" id="employee_name" name="employee_name">
-              </div>
-              <div class="form-group">
-                <label for="employee_salary" class="col-form-label">Salary:</label>
-                <input type="number" class="form-control" id="employee_salary" name="employee_salary">
-              </div>
-              <div class="form-group">
-                <label for="employee_occupation" class="col-form-label">Occupation:</label>
-                <input type="text" class="form-control" id="employee_occupation" name="employee_occupation">
+                <label for="room_number" class="col-form-label">Name:</label>
+                <input type="text" class="form-control" id="room_number" name="room_number">
+                <label for="type" style="margin-top: 0px;">Room Type:</label>
+                <br>
+                <select id="type" name="type" class="form-select" style="height: 50px; width: 100%;">
+                    {% for t_room in room_type %}
+                    <option value="{{ t_room.id }}">
+                    {{ t_room.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <label for="room_price" class="col-form-label" style="margin-top: 5px;">Price:</label>
+                <input type="number" class="form-control" id="room_price" name="room_price">
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -84,11 +97,11 @@
             </form>
             <script>
                 function validateForm() {
-                    const name = document.getElementById("employee_name").value;
-                    const salary = document.getElementById("employee_salary").value;
-                    const occupation = document.getElementById("employee_occupation").value;
+                    const name = document.getElementById("room_number").value;
+                    const type = document.getElementById("type").value;
+                    const price = document.getElementById("room_price").value;
 
-                    if (!name || !salary || !occupation) {
+                    if (!name || !type || !price) {
                         alert("Please fill in all fields.");
                         return false; // Prevent form submission
                     }
@@ -100,6 +113,44 @@
       </div>
   </div>
 
+    <div class="modal fade" id="typeModal" tabindex="-1" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="typeModalLabel">Room Type</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Type Name</th>
+                  <th scope="col">Bedroom Amount</th>
+                  <th scope="col">Bathroom Amount</th>
+                  <th scope="col">Kitchen Amount</th>
+                  <th scope="col">Furnishing LV.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for type in room_type %}
+                    <tr>
+                      <td>{{type.name}}</td>
+                      <td>{{type.bedroom_amount}}</td>
+                      <td>{{type.bathroom_amount}}</td>
+                      <td>{{type.kitchen_amount}}</td>
+                      <td>{{type.furnishing_level}}</td>
+                    </tr>
+                {% endfor %}
+              </table>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   <div class="container" style="max-height: 700px;">
     <!-- Left Section: Filter Form -->
@@ -107,94 +158,122 @@
         <h2>Filter Data</h2>
         <!-- Make the form submit as a GET request -->
         <form method="get">
-<!--            &lt;!&ndash; Name Filter &ndash;&gt;-->
-<!--            <label for="filter" style="margin-top: 15px;">Filter by name:</label>-->
-<!--            <input type="text" id="filter" name="filter" value="{{ request.GET.filter }}" placeholder="Enter name">-->
-            <!--Occupation Filter -->
-            <label for="status">Filter by status:</label>
+            <!-- Name Filter -->
+            <label for="filter" style="margin-top: 15px;">Filter by room number:</label>
+            <input type="text" id="filter" name="filter" value="{{ request.GET.filter }}" placeholder="Enter room number">
+            <!--Price Filter-->
+            <label for="price" class="form-label" style="margin-top: 15px;">Filter by price</label>
+            <input type="range" class="form-range" min="{{ min_price }}" max="{{ max_price }}" step="100" id="price" name="price" value="{{ current_price }}">
+            <div class="d-flex justify-content-between">
+                <span>{{ min_price }}</span>
+                <span id="current-value">Current: {{ current_price }}</span>
+                <span>{{ max_price }}</span>
+            </div>
+            <script>
+                // Get the range input element and the display element for current value
+                const rangeInput = document.getElementById('price');
+                const currentValueElement = document.getElementById('current_price');
+
+                // Update the displayed current value when the range slider value changes
+                rangeInput.addEventListener('input', function() {
+                    const currentValue = rangeInput.value;
+                    currentValueElement.textContent = "Current: " + currentValue;
+                });
+            </script>
+            <!-- Status Filter -->
+            <label for="status" style="margin-top: 30px;">Filter by status:</label>
             <select id="status" name="status" class="form-select" style="height: 50px;">
-            <option value="">All Occupation</option>
-                <option value="available">
-                <option value="occupied">
+            <option value="">All status</option>
+                {% for status in all_status %}
+                <option value="{{ status }}"
+                    {% if selected_status == status %}
+                        selected
+                    {% endif %}>
+                {{ status }}
                  </option>
+                {% endfor %}
              </select>
             <button class="filter-button" type="submit" style="margin-top: 20px; background: #a6e2ff; color: black;">Apply Filter</button>
         </form>
     </div>
 
     <!-- Middle Section: Data Table -->
-    <div class="table-section" style="overflow: hidden;">
-        <h2>Employee Data</h2>
+    <div class="table-section table-hover" style="overflow: hidden;">
+        <h2>Room Data</h2>
         <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
         <table class="table" style="position: relative; border-collapse: collapse;">
           <thead style="position: sticky; top: 0; background: white; z-index: 1;">
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Salary</th>
-              <th scope="col">Occupation</th>
+              <th scope="col">Room Number</th>
+              <th scope="col">Room Type</th>
+              <th scope="col">Price</th>
+              <th scope="col">Status</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            {% for r in room %}
+            {% for room in rooms %}
               <tr>
-                <td>{{ r.number }}</td>
-                <td>{{ r.type }}</td>
-                <td>{{ r.price }}</td>
-                <td>{{ r.status }}</td>
+                <td>{{ room.number }}</td>
+                <td>{{ room.room_type.name }}</td>
+                <td>{{ room.price }}</td>
+                <td>{{ room.status }}</td>
                 <td>
-                    <a href="{% url 'landlord:delete_employee' emp.id %}" class="btn btn-primary" style="background: #fffcaf; color: black; border: 1px solid gray; border-radius: 3px; padding:7px">
+                    <a href="{% url 'landlord:delete_room' room.id %}" class="btn btn-primary" style="background: #fffcaf; color: black; border: 1px solid gray; border-radius: 3px; padding:7px">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                           <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                           <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                         </svg>
                     </a>
-                    <button type="button" data-toggle="modal" data-target="#editModal-{{ emp.id }}" style="background: #fffcaf; border: 1px solid gray; color: black; border-radius: 3px;">
+                    <button type="button" data-toggle="modal" data-target="#editModal-{{ room.id }}" style="background: #fffcaf; border: 1px solid gray; color: black; border-radius: 3px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                         </svg>
                     </button>
-                    <div class="modal fade" id="editModal-{{ emp.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="editModal-{{ room.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel">Edit Employee</h5>
+                            <h5 class="modal-title" id="editModalLabel">Edit Room</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form method="post" action="{% url 'landlord:edit_employee' emp.id %}" id="employeeEdit" onsubmit="return validateEdit()">
+                            <form method="post" action="{% url 'landlord:edit_room' room.id %}" id="EditForm" onsubmit="return validateEdit()">
                               {% csrf_token %}
                               <div class="form-group">
-                                <label for="employee_name" class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" id="new_name" name="new_name" value={{emp.name}}>
-                              </div>
-                              <div class="form-group">
-                                <label for="employee_salary" class="col-form-label">Salary:</label>
-                                <input type="number" class="form-control" id="new_salary" name="new_salary" value={{emp.salary}}>
-                              </div>
-                              <div class="form-group">
-                                <label for="employee_occupation" class="col-form-label">Occupation:</label>
-                                <input type="text" class="form-control" id="new_occupation" name="new_occupation" value={{emp.occupation}}>
+                                <label for="new_number" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="new_number" name="new_number" value="{{ room.number }}">
+                                <label for="type" style="margin-top: 0px;">Room Type:</label>
+                                <br>
+                                <select id="new_type" name="new_type" class="form-select" style="height: 50px; width: 100%;">
+                                    {% for t_room in room_type %}
+                                    <option value="{{ t_room.id }}" {% if room_type == t_room %} selected {% endif %}>
+                                    {{ t_room.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <label for="new_price" class="col-form-label" style="margin-top: 5px;">Price:</label>
+                                <input type="number" class="form-control" id="new_price" name="new_price" value={{ room.price }}>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Save</button>
-                             </div>
+                              </div>
                             </form>
                             <script>
                                 function validateEdit() {
-                                    const name = document.getElementById("new_name").value;
-                                    const salary = document.getElementById("new_salary").value;
-                                    const occupation = document.getElementById("new_occupation").value;
+                                    const name = document.getElementById("new_number").value;
+                                    const type = document.getElementById("new_type").value;
+                                    const price = document.getElementById("new_price").value;
 
-                                    if (!name || !salary || !occupation) {
+                                    if (!name || !type || !price) {
                                         alert("Please fill in all fields.");
-                                        return false;
+                                        return false; // Prevent form submission
                                     }
-                                    return true;
+                                    return true; // Allow form submission
                                 }
                             </script>
                           </div>
@@ -205,7 +284,7 @@
               </tr>
             {% empty %}
               <tr>
-                <td colspan="3">No employees found matching the filter criteria.</td>
+                <td colspan="3">No rooms found matching the filter criteria.</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -217,10 +296,34 @@
     <div class="summary-section">
         <div class="sum-text">
           <h2> Summary </h2>
-<!--          <h3>Number of Employee: {{ num_employee }}</h3>-->
-<!--          <h3>Average Salary: {{ avg_this_salary }}</h3>-->
-<!--          <h3>Minimum Salary: {{ min_this_salary }}</h3>-->
-<!--          <h3>Maximum Salary: {{ max_this_salary }}</h3>-->
+          <h3>Number of room: {{ num_room }}</h3>
+          <h3 style="margin-top: 20px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
+                  <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195z"/>
+                  <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083q.088-.517.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1z"/>
+                  <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 6 6 0 0 1 3.13-1.567"/>
+              </svg>
+              Price
+          </h3>
+            <div class="salary-info">
+              <div class="salary-item">
+                <h3>Minimum Price:</h3>
+                <span>{{ min_this_price }}</span>
+              </div>
+              <div class="salary-item">
+                <h3>Maximum Price:</h3>
+                <span>{{ max_this_price }}</span>
+              </div>
+              <div class="salary-item">
+                <h3>Average Price:</h3>
+                <span>{{ avg_this_price }}</span>
+              </div>
+              <div class="salary-item">
+                <h3>Total Price:</h3>
+                <span>{{ sum_this_price }}</span>
+              </div>
+            </div>
         </div>
     </div>
   </div>

@@ -100,11 +100,17 @@
     <!-- Left Section: Filter Form -->
     <div class="filter-section">
         <h2>Filter Data</h2>
-        <!-- Make the form submit as a GET request -->
         <form method="get">
             <!-- Name Filter -->
             <label for="filter" style="margin-top: 15px;">Filter by name:</label>
             <input type="text" id="filter" name="filter" value="{{ request.GET.filter }}" placeholder="Enter name">
+            <!--Contact Filter-->
+            <label for="type" style="margin-top: 10px;">Filter by contact type:</label>
+            <select id="type" name="type" class="form-select" style="height: 50px;">
+            <option value="">All Contact</option>
+            <option value="email">Email</option>
+            <option value="number">Phone Number</option>
+             </select>
             <button class="filter-button" type="submit" style="margin-top: 20px; background: #a6e2ff; color: black;">Apply Filter</button>
         </form>
     </div>

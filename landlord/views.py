@@ -19,6 +19,7 @@ def employee_page(request):
     name_filter = request.GET.get('filter')
     occupation_filter = request.GET.get('occupation')
     salary_filter = request.GET.get('salary')
+    order = request.GET.get('order')
 
     if name_filter:
         condition["name__icontains"] = name_filter
@@ -26,6 +27,8 @@ def employee_page(request):
         condition["occupation"] = occupation_filter
     if salary_filter:
         condition["salary__lt"] = salary_filter
+    if not order:
+        order = "name"
 
     employee = Employee.objects.filter(**condition)
     occupations = Employee.objects.values_list('occupation', flat=True).distinct()
@@ -48,7 +51,7 @@ def employee_page(request):
         sum_this_salary = employee.aggregate(Sum('salary'))['salary__sum']
 
     context = {
-        'employee': employee,
+        'employee': employee.order_by(order),
         'num_employee': employee.count(),
         'current_occ': occupation_filter,
         'current_sal': current_sal,
@@ -58,7 +61,8 @@ def employee_page(request):
         'avg_this_salary': f"{average_this_salary:,.2f}",
         'sum_this_salary': f"{sum_this_salary:,.2f}",
         'min_this_salary': f"{min_this_salary:,.2f}",
-        'max_this_salary': f"{max_this_salary:,.2f}"
+        'max_this_salary': f"{max_this_salary:,.2f}",
+        "current_order": order,
     }
     return render(request, "landlord/employee.html", context=context)
 
@@ -114,11 +118,18 @@ def edit_employee(request, employee_id):
 def tenant_page(request):
     condition ={}
     name_filter = request.GET.get('filter')
+    contact_type = request.GET.get('type')
     if name_filter:
         condition["name__icontains"] = name_filter
     tenants = Tenant.objects.filter(**condition)
+
+    if contact_type == 'email':
+        tenants = tenants.filter(contact_info__icontains="@")
+    if contact_type == 'number':
+        tenants = tenants.exclude(contact_info__icontains="@")
+
     context = {
-        "tenants": tenants,
+        "tenants": tenants.order_by("name"),
         "num_tenant": tenants.count(),
     }
     return render(request, "landlord/tenant.html", context=context)
@@ -165,12 +176,16 @@ def room_page(request):
     name_filter = request.GET.get('filter')
     status_filter = request.GET.get('status')
     price_filter = request.GET.get('price')
+    order_filter = request.GET.get('order')
     if name_filter:
         condition["number__istartswith"] = name_filter
     if status_filter:
         condition["status"] = status_filter
     if price_filter:
         condition["price__lt"] = price_filter
+
+    if not order_filter:
+        order_filter = "number"
 
     rooms = Room.objects.filter(**condition)
     room_type = RoomType.objects.all()
@@ -194,7 +209,7 @@ def room_page(request):
         sum_this_price = rooms.aggregate(Sum('price'))['price__sum']
 
     context = {
-        "rooms": rooms,
+        "rooms": rooms.order_by(order_filter),
         "room_type": room_type,
         "min_price": min_price,
         "max_price": max_price,
@@ -206,6 +221,7 @@ def room_page(request):
         'all_status': all_status,
         'selected_status': status_filter,
         "num_room": rooms.count(),
+        "current_order": order_filter,
     }
     return render(request, "landlord/room.html", context=context)
 

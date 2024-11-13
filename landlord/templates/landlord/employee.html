@@ -148,7 +148,31 @@
 
     <!-- Middle Section: Data Table -->
     <div class="table-section table-hover" style="overflow: hidden;">
-        <h2>Employee Data</h2>
+        <div style="display: flex; justify-content: space-between;">
+            <h2>Employee Data</h2>
+            <div>
+                <label for="order" style="margin-right:3px;">sort by:</label>
+                <select id="order" name="order" class="form-select" style="height: 30px;" onchange="submitForm()">
+                    <option value="name" {% if current_order == "name" %} selected {% endif %}>Name</option>
+                    <option value="salary" {% if current_order == "salary" %} selected {% endif %}>Salary</option>
+                    <option value="occupation" {% if current_order == "occupation" %} selected {% endif %}>Occupation</option>
+                 </select>
+                <script>
+                    function submitForm() {
+                        // Get the selected value
+                        const orderSelect = document.getElementById('order');
+                        const selectedOrder = orderSelect.value;
+
+                        // Construct the URL with the order parameter
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('order', selectedOrder);
+
+                        // Redirect to the new URL with the updated query parameter
+                        window.location.href = url;
+                    }
+                </script>
+            </div>
+        </div>
         <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
         <table class="table" style="position: relative; border-collapse: collapse;">
           <thead style="position: sticky; top: 0; background: white; z-index: 1;">

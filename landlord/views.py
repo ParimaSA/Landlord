@@ -1,6 +1,7 @@
 from multiprocessing.dummy import current_process
 from pyexpat.errors import messages
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.db.models import Min, Max, Avg, Sum
 from matplotlib.style.core import context
@@ -14,13 +15,16 @@ def detail_page(request):
     return render(request, "landlord/home.html")
 
 
+@login_required
 def employee_page(request):
     condition = {}
+    apartment = Apartment.objects.get(landlord=request.user)
     name_filter = request.GET.get('filter')
     occupation_filter = request.GET.get('occupation')
     salary_filter = request.GET.get('salary')
     order = request.GET.get('order')
 
+    condition["apartment"] = apartment
     if name_filter:
         condition["name__icontains"] = name_filter
     if occupation_filter:
@@ -171,12 +175,16 @@ def edit_tenant(request, tenant_id):
     return redirect("landlord:tenant")
 
 
+@login_required
 def room_page(request):
     condition ={}
+    apartment = Apartment.objects.get(landlord=request.user)
     name_filter = request.GET.get('filter')
     status_filter = request.GET.get('status')
     price_filter = request.GET.get('price')
     order_filter = request.GET.get('order')
+
+    condition["apartment"] = apartment
     if name_filter:
         condition["number__istartswith"] = name_filter
     if status_filter:
@@ -268,12 +276,20 @@ def edit_room(request, room_id):
     return redirect("landlord:room")
 
 
+@login_required
 def parking_page(request):
     condition ={}
+    apartment = Apartment.objects.get(landlord=request.user)
+    rooms = Room.objects.filter(apartment=apartment).order_by("number")
+
     zone_filter = request.GET.get('zone')
     room_filter = request.GET.get('room')
     plate_filter = request.GET.get('plate')
     order_filter = request.GET.get('order')
+
+    parking = Parking.objects.filter(room__in=rooms)
+    all_zone = parking.values_list('zone', flat=True).distinct()
+
     if zone_filter:
         condition["zone"] = zone_filter
     if room_filter:
@@ -288,12 +304,11 @@ def parking_page(request):
     if room_filter:
         current_room = int(room_filter)
 
-    parking = Parking.objects.filter(**condition)
-    all_zone = Parking.objects.values_list('zone', flat=True).distinct()
+    parking = parking.filter(**condition)
 
     context = {
         "parking": parking.order_by(order_filter),
-        "rooms": Room.objects.all().order_by("number"),
+        "rooms": rooms,
         "all_zone": all_zone,
         "current_zone": zone_filter,
         "current_room": current_room,

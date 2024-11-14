@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (detail_page, employee_page, add_employee, delete_employee, edit_employee,
                     tenant_page, add_tenant, delete_tenant, edit_tenant,
                     room_page, add_room, delete_room, edit_room,

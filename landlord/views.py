@@ -43,6 +43,7 @@ def employee_page(request):
     average_this_salary = 0
     min_this_salary = 0
     max_this_salary = 0
+    sum_this_salary = 0
 
     current_sal = max_salary
     if request.method == 'GET' and salary_filter:
@@ -135,6 +136,7 @@ def tenant_page(request):
     context = {
         "tenants": tenants.order_by("name"),
         "num_tenant": tenants.count(),
+        "current_type": contact_type,
     }
     return render(request, "landlord/tenant.html", context=context)
 

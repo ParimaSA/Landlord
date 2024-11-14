@@ -282,8 +282,11 @@ def parking_page(request):
     if plate_filter:
         condition["plate_number__startswith"] = plate_filter
 
+    current_room = room_filter
     if not order_filter:
         order_filter = "zone"
+    if room_filter:
+        current_room = int(room_filter)
 
     parking = Parking.objects.filter(**condition)
     all_zone = Parking.objects.values_list('zone', flat=True).distinct()
@@ -293,7 +296,7 @@ def parking_page(request):
         "rooms": Room.objects.all().order_by("number"),
         "all_zone": all_zone,
         "current_zone": zone_filter,
-        "current_room": int(room_filter),
+        "current_room": current_room,
         "num_parking": parking.count(),
     }
     return render(request, "landlord/parking.html", context=context)

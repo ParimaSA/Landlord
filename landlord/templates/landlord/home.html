@@ -1,6 +1,6 @@
 {% extends 'landlord/base.html' %}
 
-{% block title %} Home {% endblock %}
+{% block title %} Room {% endblock %}
 
 {% block content %}
 
@@ -25,10 +25,13 @@
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:tenant' %}">Tenant</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Parking</a>
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:parking' %}">Parking</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Room</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Lease Contract</a>
             </li>
         </ul>
     </div>

@@ -27,17 +27,20 @@ body {
 .filter-section {
     flex-grow: 1;
     min-width: 400px;
+    background: #fffee8;
 }
 
 .table-section {
     flex-grow: 2;
     min-width: 900px;
     overflow-x: auto;
+    background: #e1f5ff;
 }
 
 .summary-section {
     flex-grow: 1;
     min-width: 400px;
+    background: #fffee8;
 }
 
 form {

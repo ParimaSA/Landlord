@@ -1,6 +1,6 @@
 {% extends 'landlord/base.html' %}
 
-{% block title %} Home {% endblock %}
+{% block title %} Tenant {% endblock %}
 
 {% block content %}
   {% load static %}
@@ -25,10 +25,13 @@
               <a class="nav-link font-weight-bold" style="color: white;" href="{% url 'landlord:tenant' %}">Tenant</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Parking</a>
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:parking' %}">Parking</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Room</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Lease Contract</a>
             </li>
         </ul>
     </div>
@@ -45,7 +48,7 @@
   <br>
   <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 20px; margin-right: 50px; ">
       <h1 class="font-weight-bold" style="margin-left: 50px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 14 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 14 16">
               <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
           </svg>
           Tenant

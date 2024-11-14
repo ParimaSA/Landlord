@@ -7,7 +7,7 @@ from matplotlib.style.core import context
 from numpy.ma.extras import average
 from socks import method
 
-from .models import Employee, Apartment, Room, Tenant, RoomType
+from .models import Employee, Apartment, Room, Tenant, RoomType, Parking
 
 
 def detail_page(request):
@@ -266,3 +266,75 @@ def edit_room(request, room_id):
         room.price = price
     room.save()
     return redirect("landlord:room")
+
+
+def parking_page(request):
+    condition ={}
+    zone_filter = request.GET.get('zone')
+    room_filter = request.GET.get('room')
+    plate_filter = request.GET.get('plate')
+    order_filter = request.GET.get('order')
+    if zone_filter:
+        condition["zone"] = zone_filter
+    if room_filter:
+        room = Room.objects.get(pk=room_filter)
+        condition["room"] = room
+    if plate_filter:
+        condition["plate_number__startswith"] = plate_filter
+
+    if not order_filter:
+        order_filter = "zone"
+
+    parking = Parking.objects.filter(**condition)
+    all_zone = Parking.objects.values_list('zone', flat=True).distinct()
+
+    context = {
+        "parking": parking.order_by(order_filter),
+        "rooms": Room.objects.all().order_by("number"),
+        "all_zone": all_zone,
+        "current_zone": zone_filter,
+        "current_room": int(room_filter),
+        "num_parking": parking.count(),
+    }
+    return render(request, "landlord/parking.html", context=context)
+
+
+def add_parking(request):
+    if request.method == "POST":
+        zone = request.POST.get("parking_zone")
+        room_id = request.POST.get("parking_room")
+        room = Room.objects.get(pk=room_id)
+        plate_number = request.POST.get("parking_plate")
+        Parking.objects.create(zone=zone, room=room, plate_number=plate_number)
+        return redirect("landlord:parking")
+    return redirect("landlord:parking")
+
+
+def delete_parking(request, parking_id):
+    landlord = request.user
+    try:
+        parking = Parking.objects.get(room__apartment__landlord=landlord, pk=parking_id)
+    except(Room.DoesNotExist, Parking.DoesNotExist):
+        return redirect("landlord:parking")
+    parking.delete()
+    return redirect("landlord:parking")
+
+
+def edit_parking(request, parking_id):
+    landlord = request.user
+    try:
+        parking = Parking.objects.get(room__apartment__landlord=landlord, pk=parking_id)
+    except(Room.DoesNotExist, Parking.DoesNotExist):
+        return redirect("landlord:parking")
+    zone = request.POST.get("new_zone")
+    room_id = request.POST.get("new_room")
+    plate_number = request.POST.get("new_plate")
+    if zone:
+        parking.zone = zone
+    if room_id:
+        room = Room.objects.get(pk=room_id)
+        parking.room = room
+    if plate_number:
+        parking.plate_number = plate_number
+    parking.save()
+    return redirect("landlord:parking")

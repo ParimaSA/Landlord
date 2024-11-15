@@ -19,7 +19,7 @@
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link font-weight-bold" style="color: white;" href="{% url 'landlord:employee' %}">Employee<span class="sr-only">(current)</span></a>
+                <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:employee' %}">Employee<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:tenant' %}">Tenant</a>
@@ -31,7 +31,7 @@
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Room</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:lease_contract' %}">Lease Contract</a>
+              <a class="nav-link font-weight-bold" style="color: white;" href="{% url 'landlord:lease_contract' %}">Lease Contract</a>
             </li>
         </ul>
     </div>
@@ -53,35 +53,45 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 400 612">
               <path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM128 256a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM80 432c0-44.2 35.8-80 80-80l64 0c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16L96 448c-8.8 0-16-7.2-16-16z"/>
           </svg>
-          Employee
+          Lease Contract
       </h1>
-      <button type="button" data-toggle="modal" data-target="#exampleModal" style="background: #fffcaf; color: black; margin-right: 20px; border-radius: 10px; padding:10px;">+ Add Employee</button>
+      <button type="button" data-toggle="modal" data-target="#addModal" style="background: #fffcaf; color: black; margin-right: 20px; border-radius: 10px; padding:10px;">+ Add Lease Contract</button>
   </div>
 
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Employee</h5>
+            <h5 class="modal-title" id="addModalLabel">Add Lease Contract</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form method="post" action="{% url 'landlord:add_employee' %}" id="employeeForm" onsubmit="return validateForm()">
+            <form method="post" action="{% url 'landlord:add_lease_contract' %}" id="contractForm" onsubmit="return validateForm()">
               {% csrf_token %}
-              <div class="form-group">
-                <label for="employee_name" class="col-form-label">Name:</label>
-                <input type="text" class="form-control" id="employee_name" name="employee_name">
-              </div>
-              <div class="form-group">
-                <label for="employee_salary" class="col-form-label">Salary:</label>
-                <input type="number" class="form-control" id="employee_salary" name="employee_salary">
-              </div>
-              <div class="form-group">
-                <label for="employee_occupation" class="col-form-label">Occupation:</label>
-                <input type="text" class="form-control" id="employee_occupation" name="employee_occupation">
-              </div>
+              <label for="room" style="margin-top: 10px;">Room:</label>
+              <select id="lease_room" name="lease_room" class="form-select" style="height: 50px;">
+                {% for r in available_rooms %}
+                <option value="{{ r.id }}"
+                    {% if r.id == current_room %}
+                        selected
+                    {% endif %}>
+                {{ r.number }}
+                 </option>
+                {% endfor %}
+             </select>
+              <label for="lease_tenant" style="margin-top: 10px;">Tenant:</label>
+              <select id="lease_tenant" name="lease_tenant" class="form-select" style="height: 50px;">
+                {% for ten in all_tenant %}
+                    <option value="{{ ten.id }}"> {{ ten.name }} </option>
+                {% endfor %}
+             </select>
+              <label for="lease_start" class="form-label" style="margin-top: 15px;">Start Date</label>
+              <input type="date" class="form-control" id="lease_start" name="lease_start">
+              <label for="lease_end" class="form-label" style="margin-top: 15px;">End Date</label>
+              <input type="date" class="form-control" id="lease_end" name="lease_end">
+
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Add</button>
@@ -89,15 +99,20 @@
             </form>
             <script>
                 function validateForm() {
-                    const name = document.getElementById("employee_name").value;
-                    const salary = document.getElementById("employee_salary").value;
-                    const occupation = document.getElementById("employee_occupation").value;
+                    const room = document.getElementById("lease_room").value;
+                    const tenant = document.getElementById("lease_tenant").value;
+                    const start = document.getElementById("lease_start").value;
+                    const end = document.getElementById("lease_end").value;
 
-                    if (!name || !salary || !occupation) {
+                    if (!room || !tenant || !start || !end) {
                         alert("Please fill in all fields.");
-                        return false; // Prevent form submission
+                        return false;
                     }
-                    return true; // Allow form submission
+                    if (start > end) {
+                        alert("Start date can not be after end date.");
+                        return false;
+                    }
+                    return true;
                 }
             </script>
           </div>
@@ -112,30 +127,35 @@
         <h2>Filter Data</h2>
         <!-- Make the form submit as a GET request -->
         <form method="get">
-            <!-- Name Filter -->
-            <label for="filter" style="margin-top: 15px;">Filter by name:</label>
-            <input type="text" id="filter" name="filter" value="{{ request.GET.filter }}" placeholder="Enter name">
-            <!--Occupation Filter -->
-            <label for="occupation">Filter by occupation:</label>
-            <select id="occupation" name="occupation" class="form-select" style="height: 50px;">
-            <option value="">All Occupation</option>
-                {% for occupation in occupations %}
-                <option value="{{ occupation }}"
-                    {% if occupation == current_occ %}
+            <!--Room Filter -->
+            <label for="room" style="margin-top: 10px;">Filter by room:</label>
+            <select id="room" name="room" class="form-select" data-live-search="true" style="height: 50px;">
+            <option value="">All Room</option>
+                {% for r in rooms %}
+                <option value="{{ r.id }}"
+                    {% if r.id == current_room %}
                         selected
                     {% endif %}>
-                {{ occupation }}
+                {{ r.number }}
                  </option>
                 {% endfor %}
              </select>
-            <!--Salary Filter -->
-            <label for="salary" class="form-label" style="margin-top: 15px;">Filter by salary</label>
-            <input type="range" class="form-range" min="{{ min_salary }}" max="{{ max_salary }}" step="100" id="salary" name="salary" value="{{ current_sal }}">
-            <div class="d-flex justify-content-between">
-                <span>{{ min_salary }}</span>
-                <span id="current-value">Current: {{ current_sal }}</span>
-                <span>{{ max_salary }}</span>
-            </div>
+            <!--Tenant Filter -->
+            <label for="name" style="margin-top: 15px;">Filter by tenant name:</label>
+            <input type="text" id="name" name="name" value="{{ request.GET.name }}" placeholder="Enter tenant name">
+            <!--Start Date Filter -->
+            <label for="sdate" class="form-label" style="margin-top: 15px;">Filter by start date</label>
+            <input type="date" class="form-control" value="{{ request.GET.sdate }}" id="sdate" name="sdate">
+            <!--End Date Filter -->
+            <label for="edate" class="form-label" style="margin-top: 15px;">Filter by start date</label>
+            <input type="date" class="form-control" value="{{ request.GET.edate }}" id="edate" name="edate">
+            <!--Status Filter -->
+            <label for="status" style="margin-top: 10px;">Filter by status:</label>
+            <select id="status" name="status" class="form-select" style="height: 50px;">
+                <option value="">All Status</option>
+                <option value="active" {% if request.GET.status == "active" %} selected {% endif %}>Active</option>
+                <option value="expired" {% if request.GET.status == "expired" %} selected {% endif %}>Expired</option>
+            </select>
             <script>
                 // Get the range input element and the display element for current value
                 const rangeInput = document.getElementById('salary');
@@ -154,13 +174,14 @@
     <!-- Middle Section: Data Table -->
     <div class="table-section table-hover" style="overflow: hidden;">
         <div style="display: flex; justify-content: space-between;">
-            <h2>Employee Data</h2>
+            <h2>Lease Contract Data</h2>
             <div>
                 <label for="order" style="margin-right:3px;">sort by:</label>
                 <select id="order" name="order" class="form-select" style="height: 30px;" onchange="submitForm()">
-                    <option value="name" {% if current_order == "name" %} selected {% endif %}>Name</option>
-                    <option value="salary" {% if current_order == "salary" %} selected {% endif %}>Salary</option>
-                    <option value="occupation" {% if current_order == "occupation" %} selected {% endif %}>Occupation</option>
+                    <option value="room" {% if request.GET.order == "room" %} selected {% endif %}>Room</option>
+                    <option value="tenant" {% if request.GET.order == "tenant" %} selected {% endif %}>Tenant</option>
+                    <option value="lease_start" {% if request.GET.order == "lease_start" %} selected {% endif %}>Start Date</option>
+                    <option value="lease_end" {% if request.GET.order == "lease_end" %} selected {% endif %}>End Date</option>
                  </select>
                 <script>
                     function submitForm() {
@@ -182,71 +203,87 @@
         <table class="table" style="position: relative; border-collapse: collapse;">
           <thead style="position: sticky; top: 0; background: white; z-index: 1;">
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Salary</th>
-              <th scope="col">Occupation</th>
+              <th scope="col">Room</th>
+              <th scope="col">Tenant</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">End Date</th>
+              <th scope="col">Status</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            {% for emp in employee %}
+            {% for cont in contracts %}
               <tr>
-                <td>{{ emp.name }}</td>
-                <td>{{ emp.salary }}</td>
-                <td>{{ emp.occupation }}</td>
+                <td>{{ cont.room.number }}</td>
+                <td>{{ cont.tenant.name }}</td>
+                <td>{{ cont.lease_start|date:"Y-m-d" }}</td>
+                <td>{{ cont.lease_end|date:"Y-m-d" }}</td>
                 <td>
-                    <a href="{% url 'landlord:delete_employee' emp.id %}" class="btn btn-primary" style="background: #fffcaf; color: black; border: 1px solid gray; border-radius: 3px; padding:7px">
+                    {% if cont.lease_end < today %}
+                        Expired
+                    {% else %}
+                        Active
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'landlord:delete_lease_contract' cont.id %}" class="btn btn-primary" style="background: #fffcaf; color: black; border: 1px solid gray; border-radius: 3px; padding:7px">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                           <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                           <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                         </svg>
                     </a>
-                    <button type="button" data-toggle="modal" data-target="#editModal-{{ emp.id }}" style="background: #fffcaf; border: 1px solid gray; color: black; border-radius: 3px;">
+                    <button type="button" data-toggle="modal" data-target="#editModal-{{ cont.id }}" style="background: #fffcaf; border: 1px solid gray; color: black; border-radius: 3px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                         </svg>
                     </button>
-                    <div class="modal fade" id="editModal-{{ emp.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="editModal-{{ cont.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel">Edit Employee</h5>
+                            <h5 class="modal-title" id="editModalLabel">Edit Lease Contract</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form method="post" action="{% url 'landlord:edit_employee' emp.id %}" id="employeeEdit" onsubmit="return validateEdit()">
+                            <form method="post" action="{% url 'landlord:edit_lease_contract' cont.id %}" id="contractEdit" onsubmit="return validateEdit()">
                               {% csrf_token %}
-                              <div class="form-group">
-                                <label for="employee_name" class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" id="new_name" name="new_name" value={{emp.name}}>
-                              </div>
-                              <div class="form-group">
-                                <label for="employee_salary" class="col-form-label">Salary:</label>
-                                <input type="number" class="form-control" id="new_salary" name="new_salary" value={{emp.salary}}>
-                              </div>
-                              <div class="form-group">
-                                <label for="employee_occupation" class="col-form-label">Occupation:</label>
-                                <input type="text" class="form-control" id="new_occupation" name="new_occupation" value={{emp.occupation}}>
-                              </div>
+                              <label for="new_room" style="margin-top: 10px;">Room:</label>
+                              <select id="new_room" name="new_room" class="form-select" style="height: 50px;">
+                                <option value="{{cont.room.id}}" selected>{{cont.room.number}}</option>
+                                {% for r in available_rooms %}
+                                <option value="{{ r.id }}">{{ r.number }}</option>
+                                {% endfor %}
+                             </select>
+                              <label for="new_tenant" style="margin-top: 10px;">Tenant:</label>
+                              <select id="new_tenant" name="new_tenant" class="form-select" style="height: 50px;">
+                                {% for ten in all_tenant %}
+                                    <option value="{{ ten.id }}" {% if cont.tenant == ten %} selected {% endif %}> {{ ten.name }} </option>
+                                {% endfor %}
+                             </select>
+                              <label for="new_start" class="form-label" style="margin-top: 15px;">Start Date</label>
+                              <input type="date" class="form-control" id="new_start" name="new_start" value="{{ cont.lease_start|date:'Y-m-d' }}">
+                              <label for="new_end" class="form-label" style="margin-top: 15px;">End Date</label>
+                              <input type="date" class="form-control" id="new_end" name="new_end" value="{{ cont.lease_end|date:'Y-m-d' }}">
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Save</button>
-                             </div>
+                              </div>
                             </form>
                             <script>
                                 function validateEdit() {
-                                    const name = document.getElementById("new_name").value;
-                                    const salary = document.getElementById("new_salary").value;
-                                    const occupation = document.getElementById("new_occupation").value;
+                                    // Get the selected value
+                                    const orderSelect = document.getElementById('order');
+                                    const selectedOrder = orderSelect.value;
 
-                                    if (!name || !salary || !occupation) {
-                                        alert("Please fill in all fields.");
-                                        return false;
-                                    }
-                                    return true;
+                                    // Construct the URL with the order parameter
+                                    const url = new URL(window.location.href);
+                                    url.searchParams.set('order', selectedOrder);
+
+                                    // Redirect to the new URL with the updated query parameter
+                                    window.location.href = url;
                                 }
                             </script>
                           </div>
@@ -257,7 +294,7 @@
               </tr>
             {% empty %}
               <tr>
-                <td colspan="3">No employees found matching the filter criteria.</td>
+                <td colspan="3">No lease contract found matching the filter criteria.</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -269,7 +306,7 @@
     <div class="summary-section">
         <div class="sum-text">
           <h2> Summary </h2>
-          <h3>Number of Employee: {{ num_employee }}</h3>
+          <h3>Number of lease contract: {{ num_contract }}</h3>
           <h3 style="margin-top: 20px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
@@ -277,24 +314,31 @@
                   <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083q.088-.517.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1z"/>
                   <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 6 6 0 0 1 3.13-1.567"/>
               </svg>
-              Salary
+              Status
           </h3>
           <div class="salary-info">
               <div class="salary-item">
-                <h3>Minimum Salary:</h3>
-                <span>{{ min_this_salary }}</span>
+                <h3>Active Lease Contract:</h3>
+                <span>{{ current_active }}</span>
               </div>
               <div class="salary-item">
-                <h3>Maximum Salary:</h3>
-                <span>{{ max_this_salary }}</span>
+                <h3>Expired Lease Contract:</h3>
+                <span>{{ current_expired }}</span>
               </div>
+          </div>
+          <h3 style="margin-top: 20px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
+                  <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195z"/>
+                  <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083q.088-.517.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1z"/>
+                  <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 6 6 0 0 1 3.13-1.567"/>
+              </svg>
+              Income
+          </h3>
+          <div class="salary-info">
               <div class="salary-item">
-                <h3>Average Salary:</h3>
-                <span>{{ avg_this_salary }}</span>
-              </div>
-              <div class="salary-item">
-                <h3>Total Salary:</h3>
-                <span>{{ sum_this_salary }}</span>
+                <h3>Total Income:</h3>
+                <span>{{ total_income }}</span>
               </div>
           </div>
         </div>

@@ -1,17 +1,14 @@
-from multiprocessing.dummy import current_process
-from pyexpat.errors import messages
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.db.models import Min, Max, Avg, Sum
-from matplotlib.style.core import context
-from numpy.ma.extras import average
-from socks import method
-
-from .models import Employee, Apartment, Room, Tenant, RoomType, Parking
+from django.utils import timezone
+from .models import Employee, Apartment, Room, Tenant, RoomType, Parking, LeaseContract
 
 
 def detail_page(request):
+    check_room_status()
     return render(request, "landlord/home.html")
 
 
@@ -179,11 +176,13 @@ def edit_tenant(request, tenant_id):
 
 @login_required
 def room_page(request):
+    check_room_status()
     condition ={}
     apartment = Apartment.objects.get(landlord=request.user)
     name_filter = request.GET.get('filter')
     status_filter = request.GET.get('status')
     price_filter = request.GET.get('price')
+    type_filter = request.GET.get("room_type")
     order_filter = request.GET.get('order')
 
     condition["apartment"] = apartment
@@ -193,9 +192,15 @@ def room_page(request):
         condition["status"] = status_filter
     if price_filter:
         condition["price__lt"] = price_filter
+    if type_filter:
+        this_type = RoomType.objects.get(pk=type_filter)
+        condition["room_type"] = this_type
 
+    selected_type = None
     if not order_filter:
         order_filter = "number"
+    if type_filter:
+        selected_type = int(type_filter)
 
     rooms = Room.objects.filter(**condition)
     room_type = RoomType.objects.all()
@@ -230,6 +235,7 @@ def room_page(request):
         "sum_this_price": f"{sum_this_price:,.2f}",
         'all_status': all_status,
         'selected_status': status_filter,
+        'selected_type': selected_type,
         "num_room": rooms.count(),
         "current_order": order_filter,
     }
@@ -358,3 +364,122 @@ def edit_parking(request, parking_id):
         parking.plate_number = plate_number
     parking.save()
     return redirect("landlord:parking")
+
+
+@login_required
+def lease_contract_page(request):
+    condition ={}
+    apartment = Apartment.objects.get(landlord=request.user)
+    rooms = Room.objects.filter(apartment=apartment)
+
+    room_filter = request.GET.get('room')
+    name_filter = request.GET.get('name')
+    start_filter = request.GET.get('sdate')
+    end_filter = request.GET.get('edate')
+    status_filter = request.GET.get('status')
+    order_filter = request.GET.get('order')
+
+    contracts = LeaseContract.objects.filter(room__in=rooms)
+
+    if room_filter:
+        room = Room.objects.get(pk=room_filter)
+        condition["room"] = room
+    if name_filter:
+        condition["tenant__name__icontains"] = name_filter
+    if start_filter:
+        condition["lease_start__date"] = start_filter
+    if end_filter:
+        condition["lease_end__date"] = end_filter
+    if status_filter:
+        if status_filter == "active":
+            condition["lease_end__date__gt"] = timezone.now()
+        if status_filter == "expired":
+            condition["lease_end__date__lt"] = timezone.now()
+
+    if not order_filter:
+        order_filter = "room"
+
+    available_rooms = rooms.filter(status="available")
+    contracts = contracts.filter(**condition)
+
+    total_income = sum(contract.room.price for contract in LeaseContract.objects.all())
+
+    context = {
+        "contracts": contracts.order_by(order_filter),
+        "available_rooms": available_rooms,
+        "all_tenant": Tenant.objects.all().order_by("name"),
+        "rooms": rooms,
+        "num_contract": contracts.count(),
+        "current_active": contracts.filter(lease_end__date__gt=timezone.now()).count(),
+        "current_expired": contracts.filter(lease_end__date__lt=timezone.now()).count(),
+        "today": timezone.now(),
+        "total_income": f"{total_income:,.2f}"
+    }
+    return render(request, "landlord/contract.html", context=context)
+
+
+
+def add_lease_contract(request):
+    if request.method == "POST":
+        room_id = request.POST.get("lease_room")
+        room = Room.objects.get(pk=room_id)
+        room.status = "occupied"
+        room.save()
+        tenant_id = request.POST.get("lease_tenant")
+        tenant = Tenant.objects.get(pk=tenant_id)
+        lease_start = request.POST.get("lease_start")
+        lease_end = request.POST.get("lease_end")
+        LeaseContract.objects.create(room=room, tenant=tenant, lease_start=lease_start, lease_end=lease_end)
+        return redirect("landlord:lease_contract")
+    return redirect("landlord:lease_contract")
+
+
+def delete_lease_contract(request, contract_id):
+    landlord = request.user
+    try:
+        contract = LeaseContract.objects.get(room__apartment__landlord=landlord, pk=contract_id)
+    except(LeaseContract.DoesNotExist):
+        return redirect("landlord:lease_contract")
+    contract.delete()
+    return redirect("landlord:lease_contract")
+
+
+def edit_lease_contract(request, contract_id):
+    landlord = request.user
+    try:
+        contract = LeaseContract.objects.get(room__apartment__landlord=landlord, pk=contract_id)
+    except(LeaseContract.DoesNotExist):
+        return redirect("landlord:lease_contract")
+    room_id = request.POST.get("new_room")
+    tenant_id = request.POST.get("new_tenant")
+    lease_start = request.POST.get("new_start")
+    lease_end = request.POST.get("new_end")
+    if room_id:
+        room = Room.objects.get(pk=room_id)
+        contract.room = room
+        if datetime.strptime(lease_end, "%Y-%m-%d").date() > timezone.now().date():
+            room.status = "occupied"
+        else:
+            room.status = "available"
+        room.save()
+    if tenant_id:
+        tenant = Tenant.objects.get(pk=tenant_id)
+        contract.tenant = tenant
+    if lease_start:
+        contract.lease_start = lease_start
+    if lease_end:
+        contract.lease_end = lease_end
+    contract.save()
+
+    return redirect("landlord:lease_contract")
+
+
+def check_room_status():
+    rooms = Room.objects.filter(status="occupied")
+    for room in rooms:
+        contracts = LeaseContract.objects.filter(room=room, lease_end__lt=timezone.now())
+        if not contracts:
+            continue
+        print(room.number, contracts, timezone.now())
+        room.status = 'available'
+        room.save()

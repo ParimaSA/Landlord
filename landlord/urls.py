@@ -2,7 +2,8 @@ from django.urls import path, include
 from .views import (detail_page, employee_page, add_employee, delete_employee, edit_employee,
                     tenant_page, add_tenant, delete_tenant, edit_tenant,
                     room_page, add_room, delete_room, edit_room,
-                    parking_page, add_parking, delete_parking, edit_parking)
+                    parking_page, add_parking, delete_parking, edit_parking,
+                    lease_contract_page, add_lease_contract, delete_lease_contract, edit_lease_contract)
 
 app_name = "landlord"
 urlpatterns = [
@@ -23,4 +24,8 @@ urlpatterns = [
     path("add_parking/", add_parking, name="add_parking"),
     path("delete_parking/<int:parking_id>", delete_parking, name="delete_parking"),
     path("edit_parking/<int:parking_id>", edit_parking, name="edit_parking"),
+    path("lease_contract/", lease_contract_page, name="lease_contract"),
+    path("add_lease_contract/", add_lease_contract, name="add_lease_contract"),
+    path("delete_lease_contract/<int:contract_id>", delete_lease_contract, name="delete_lease_contract"),
+    path("edit_lease_contract/<int:contract_id>", edit_lease_contract, name="edit_lease_contract"),
 ]

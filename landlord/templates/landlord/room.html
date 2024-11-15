@@ -31,7 +31,7 @@
               <a class="nav-link font-weight-bold" style="color: white;" href="{% url 'landlord:room' %}">Room</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Lease Contract</a>
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:lease_contract' %}">Lease Contract</a>
             </li>
         </ul>
     </div>
@@ -166,8 +166,21 @@
             <!-- Name Filter -->
             <label for="filter" style="margin-top: 15px;">Filter by room number:</label>
             <input type="text" id="filter" name="filter" value="{{ request.GET.filter }}" placeholder="Enter room number">
+            <!-- Room Type Filter -->
+            <label for="room_type" style="margin-top: 20px;">Filter by room type:</label>
+            <select id="room_type" name="room_type" class="form-select" style="height: 50px;">
+            <option value="">All type</option>
+                {% for type in room_type %}
+                <option value="{{ type.id }}"
+                    {% if selected_type == type.id %}
+                        selected
+                    {% endif %}>
+                {{ type.name }}
+                 </option>
+                {% endfor %}
+             </select>
             <!--Price Filter-->
-            <label for="price" class="form-label" style="margin-top: 15px;">Filter by price</label>
+            <label for="price" class="form-label" style="margin-top: 20px;">Filter by price</label>
             <input type="range" class="form-range" min="{{ min_price }}" max="{{ max_price }}" step="100" id="price" name="price" value="{{ current_price }}">
             <div class="d-flex justify-content-between">
                 <span>{{ min_price }}</span>

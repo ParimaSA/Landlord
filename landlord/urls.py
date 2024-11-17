@@ -3,11 +3,13 @@ from .views import (detail_page, employee_page, add_employee, delete_employee, e
                     tenant_page, add_tenant, delete_tenant, edit_tenant,
                     room_page, add_room, delete_room, edit_room,
                     parking_page, add_parking, delete_parking, edit_parking,
-                    lease_contract_page, add_lease_contract, delete_lease_contract, edit_lease_contract)
+                    lease_contract_page, add_lease_contract, delete_lease_contract, edit_lease_contract,
+                    apartment_page)
 
 app_name = "landlord"
 urlpatterns = [
     path("home/", detail_page, name="home"),
+    path("apartment/", apartment_page, name="apartment"),
     path("employee/", employee_page, name="employee"),
     path("add_employee/", add_employee, name="add_employee"),
     path("delete_employee/<int:employee_id>", delete_employee, name="delete_employee"),

@@ -1,10 +1,14 @@
+import math
 from datetime import datetime
+from lib2to3.fixes.fix_input import context
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.db.models import Min, Max, Avg, Sum
 from django.utils import timezone
-from .models import Employee, Apartment, Room, Tenant, RoomType, Parking, LeaseContract
+from matplotlib.style.core import available
+
+from .models import Employee, Apartment, Room, Tenant, RoomType, Parking, LeaseContract, ApartmentLocation
 
 
 def detail_page(request):
@@ -117,6 +121,7 @@ def edit_employee(request, employee_id):
     return redirect("landlord:employee")
 
 
+@login_required
 def tenant_page(request):
     condition ={}
     name_filter = request.GET.get('filter')
@@ -402,7 +407,11 @@ def lease_contract_page(request):
     available_rooms = rooms.filter(status="available")
     contracts = contracts.filter(**condition)
 
-    total_income = sum(contract.room.price for contract in LeaseContract.objects.all())
+    total_income = sum(contract.room.price * math.ceil((contract.lease_end - contract.lease_start).days/30) for contract in contracts)
+    duration = 1
+    if contracts.count() >=2 :
+        lease_order = contracts.order_by("lease_start")
+        duration = math.ceil((lease_order[lease_order.count()-1].lease_start - lease_order[0].lease_start).days / 30)
 
     context = {
         "contracts": contracts.order_by(order_filter),
@@ -413,7 +422,9 @@ def lease_contract_page(request):
         "current_active": contracts.filter(lease_end__date__gt=timezone.now()).count(),
         "current_expired": contracts.filter(lease_end__date__lt=timezone.now()).count(),
         "today": timezone.now(),
-        "total_income": f"{total_income:,.2f}"
+        "total_income": f"{total_income:,.2f}",
+        "avg_income": f"{total_income/duration:,.2f}",
+        "duration": f"{duration} month"
     }
     return render(request, "landlord/contract.html", context=context)
 
@@ -440,6 +451,8 @@ def delete_lease_contract(request, contract_id):
         contract = LeaseContract.objects.get(room__apartment__landlord=landlord, pk=contract_id)
     except(LeaseContract.DoesNotExist):
         return redirect("landlord:lease_contract")
+    room = contract.room
+    room.status = "available"
     contract.delete()
     return redirect("landlord:lease_contract")
 
@@ -483,3 +496,37 @@ def check_room_status():
         print(room.number, contracts, timezone.now())
         room.status = 'available'
         room.save()
+
+
+@login_required
+def apartment_page(request):
+    apartment = Apartment.objects.get(landlord=request.user)
+    location = ApartmentLocation.objects.get(apartment=apartment)
+    employee = Employee.objects.filter(apartment=apartment)
+    rooms = Room.objects.filter(apartment=apartment)
+    contracts = LeaseContract.objects.filter(room__in=rooms)
+    outcome_per_month = sum(emp.salary for emp in employee)
+    total_income = sum(contract.room.price * math.ceil((contract.lease_end - contract.lease_start).days / 30) for contract in contracts)
+    duration = 1
+    if contracts.count() >= 2:
+        lease_order = contracts.order_by("lease_start")
+        duration = math.ceil((lease_order[lease_order.count() - 1].lease_start - lease_order[0].lease_start).days / 30)
+    income_per_month = total_income/duration
+    context = {
+        "outcome": outcome_per_month,
+        "income": income_per_month,
+        "available_count": rooms.filter(status="available").count(),
+        "occupied_count": rooms.filter(status="occupied").count(),
+        "total_employee": employee.count(),
+        "total_salary": f"{outcome_per_month:,.2f}",
+        "total_room": rooms.count(),
+        "total_contract": contracts.count(),
+        "active_count": contracts.filter(lease_end__date__gt=timezone.now()).count(),
+        "expired_count": contracts.filter(lease_end__date__lt=timezone.now()).count(),
+        "total_income": f"{total_income:,.2f}",
+        "avg_income": f"{income_per_month:,.2f}",
+        "apartment": apartment,
+        "location": location,
+    }
+
+    return render(request, "landlord/apartment.html", context=context)

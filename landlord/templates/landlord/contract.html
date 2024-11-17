@@ -3,11 +3,12 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'landlord/filter_style.css' %}">
+{% load custom_filter %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'landlord/filter_style.css' %}">
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background: #f11f25;">
-    <a class="navbar-brand font-weight-bold" href="#" style="color: white;">Landlord</a>
+    <a class="navbar-brand font-weight-bold" href="{% url 'landlord:home' %}" style="color: white;">Landlord</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
         aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -16,7 +17,7 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Home</a>
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:apartment' %}">Apartment</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:employee' %}">Employee<span class="sr-only">(current)</span></a>
@@ -207,6 +208,7 @@
               <th scope="col">Tenant</th>
               <th scope="col">Start Date</th>
               <th scope="col">End Date</th>
+              <th scope="col">Income</th>
               <th scope="col">Status</th>
               <th scope="col">Action</th>
             </tr>
@@ -218,6 +220,7 @@
                 <td>{{ cont.tenant.name }}</td>
                 <td>{{ cont.lease_start|date:"Y-m-d" }}</td>
                 <td>{{ cont.lease_end|date:"Y-m-d" }}</td>
+                <td>{{ cont|calculate_price }}</td>
                 <td>
                     {% if cont.lease_end < today %}
                         Expired
@@ -307,6 +310,7 @@
         <div class="sum-text">
           <h2> Summary </h2>
           <h3>Number of lease contract: {{ num_contract }}</h3>
+          <h3>Duration: {{duration}}</h3>
           <h3 style="margin-top: 20px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
@@ -339,6 +343,10 @@
               <div class="salary-item">
                 <h3>Total Income:</h3>
                 <span>{{ total_income }}</span>
+              </div>
+              <div class="salary-item">
+                  <h3>Average Income</h3><h3 style="font-size: 13px;">(per month):</h3>
+                <span>{{ avg_income }}</span>
               </div>
           </div>
         </div>

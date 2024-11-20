@@ -403,6 +403,8 @@ def lease_contract_page(request):
 
     if not order_filter:
         order_filter = "room"
+    if order_filter == "tenant":
+        order_filter = "tenant__name"
 
     available_rooms = rooms.filter(status="available")
     contracts = contracts.filter(**condition)

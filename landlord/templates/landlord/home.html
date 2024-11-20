@@ -66,14 +66,25 @@
         <div class="row">
             <div class="col-md-4">
                 <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="90" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+                      <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+                      <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
+                    </svg>
+                    Apartment
+                </h2>
+                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
+                    mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna
+                    mollis euismod. Donec sed odio dui. </p>
+                <p><a class="btn btn-secondary" style="background: #ff7b7f; border: 1px solid white;" href="{% url 'landlord:employee' %}" role="button">View details &raquo;</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="90" viewBox="0 0 450 612">
                         <path d="M192 0c-41.8 0-77.4 26.7-90.5 64L64 64C28.7 64 0 92.7 0 128L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64l-37.5 0C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM128 256a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM80 432c0-44.2 35.8-80 80-80l64 0c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16L96 448c-8.8 0-16-7.2-16-16z"/>
                     </svg>
                     Employee
                 </h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
-                    mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna
-                    mollis euismod. Donec sed odio dui. </p>
+                <p>Manage and track information about staff involved in property management. </p>
                 <p><a class="btn btn-secondary" style="background: #ff7b7f; border: 1px solid white;" href="{% url 'landlord:employee' %}" role="button">View details &raquo;</a></p>
             </div>
             <div class="col-md-4">
@@ -83,9 +94,7 @@
                     </svg>
                     Tenant
                 </h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
-                    mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna
-                    mollis euismod. Donec sed odio dui. </p>
+                <p>Store and organize tenant details, including contact and rental history. </p>
                 <p><a class="btn btn-secondary" style="background: #ff7b7f; border: 1px solid white;" href="{% url 'landlord:tenant' %}" role="button">View details &raquo;</a></p>
             </div>
             <div class="col-md-4">
@@ -95,9 +104,7 @@
                     </svg>
                     Room
                 </h2>
-                <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula
-                    porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh,
-                    ut fermentum massa justo sit amet risus.</p>
+                <p>Keep track of room availability, condition, and rental details.</p>
                 <p><a class="btn btn-secondary" style="background: #ff7b7f; border: 1px solid white;" href="{% url 'landlord:room' %}" role="button">View details &raquo;</a></p>
             </div>
             <div class="col-md-4">
@@ -107,21 +114,18 @@
                     </svg>
                     Parking
                 </h2>
-                <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula
-                    porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh,
-                    ut fermentum massa justo sit amet risus.</p>
+                <p>Allocate and manage parking spaces for tenants.</p>
                 <p><a class="btn btn-secondary" style="background: #ff7b7f; border: 1px solid white;" href="{% url 'landlord:parking' %}" role="button">View details &raquo;</a></p>
             </div>
             <div class="col-md-4">
                 <h2>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="90" viewBox="0 0 550 612">
-                        <path d="M135.2 117.4L109.1 192l293.8 0-26.1-74.6C372.3 104.6 360.2 96 346.6 96L165.4 96c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32l181.2 0c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2l0 144 0 48c0 17.7-14.3 32-32 32l-32 0c-17.7 0-32-14.3-32-32l0-48L96 400l0 48c0 17.7-14.3 32-32 32l-32 0c-17.7 0-32-14.3-32-32l0-48L0 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="90" fill="currentColor" class="bi bi-file-earmark-post" viewBox="0 0 16 16">
+                      <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+                      <path d="M4 6.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1-.5-.5"/>
                     </svg>
                     Lease Contract
                 </h2>
-                <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula
-                    porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh,
-                    ut fermentum massa justo sit amet risus.</p>
+                <p>Record and manage lease agreements and rental terms.</p>
                 <p><a class="btn btn-secondary" style="background: #ff7b7f; border: 1px solid white;" href="{% url 'landlord:lease_contract' %}" role="button">View details &raquo;</a></p>
             </div>
         </div>

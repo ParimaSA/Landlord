@@ -1,13 +1,9 @@
 import math
 from datetime import datetime
-from lib2to3.fixes.fix_input import context
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.db.models import Min, Max, Avg, Sum
 from django.utils import timezone
-from matplotlib.style.core import available
-
 from .models import Employee, Apartment, Room, Tenant, RoomType, Parking, LeaseContract, ApartmentLocation
 
 
@@ -371,7 +367,7 @@ def edit_parking(request, parking_id):
     return redirect("landlord:parking")
 
 
-@login_required
+@login_required()
 def lease_contract_page(request):
     condition ={}
     apartment = Apartment.objects.get(landlord=request.user)
@@ -429,7 +425,6 @@ def lease_contract_page(request):
         "duration": f"{duration} month"
     }
     return render(request, "landlord/contract.html", context=context)
-
 
 
 def add_lease_contract(request):

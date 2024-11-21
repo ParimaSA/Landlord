@@ -1,4 +1,5 @@
-from django.urls import path, include
+from django.urls import path
+from django.contrib.auth import views as auth_views
 from .views import (detail_page, employee_page, add_employee, delete_employee, edit_employee,
                     tenant_page, add_tenant, delete_tenant, edit_tenant,
                     room_page, add_room, delete_room, edit_room,
@@ -9,6 +10,7 @@ from .views import (detail_page, employee_page, add_employee, delete_employee, e
 app_name = "landlord"
 urlpatterns = [
     path("home/", detail_page, name="home"),
+    path("logout/", auth_views.LogoutView.as_view(), name='logout'),
     path("apartment/", apartment_page, name="apartment"),
     path("employee/", employee_page, name="employee"),
     path("add_employee/", add_employee, name="add_employee"),

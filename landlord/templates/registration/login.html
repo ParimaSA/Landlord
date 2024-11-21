@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{% static 'landlord/filter_style.css' %}">
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background: #f11f25;">
-    <a class="navbar-brand font-weight-bold" href="#" style="color: white;">Landlord</a>
+    <a class="navbar-brand font-weight-bold" href="{% url 'landlord:home' %}" style="color: white;">Landlord</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
         aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -16,7 +16,7 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:home' %}">Home</a>
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:apartment' %}">Apartment</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:employee' %}">Employee<span class="sr-only">(current)</span></a>
@@ -31,14 +31,16 @@
               <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Room</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:room' %}">Lease Contract</a>
+              <a class="nav-link" style="color: #d1d1d1;" href="{% url 'landlord:lease_contract' %}">Lease Contract</a>
             </li>
         </ul>
     </div>
+    <a href="{% url 'login' %}">
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
         <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
     </svg>
+    </a>
 </nav>
 
 <main role="main">

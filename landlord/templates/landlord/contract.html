@@ -133,14 +133,14 @@
             <label for="room" style="margin-top: 10px;">Filter by room:</label>
             <select id="room" name="room" class="form-select" data-live-search="true" style="height: 50px;">
             <option value="">All Room</option>
-                {% for r in rooms %}
-                <option value="{{ r.id }}"
-                    {% if r.id == current_room %}
-                        selected
-                    {% endif %}>
-                {{ r.number }}
-                 </option>
-                {% endfor %}
+            {% for r in rooms %}
+            <option value="{{ r.id }}"
+                {% if r.id == current_room %}
+                    selected
+                {% endif %}>
+            {{ r.number }}
+             </option>
+            {% endfor %}
              </select>
             <!--Tenant Filter -->
             <label for="name" style="margin-top: 15px;">Filter by tenant name:</label>
@@ -149,7 +149,7 @@
             <label for="sdate" class="form-label" style="margin-top: 15px;">Filter by start date</label>
             <input type="date" class="form-control" value="{{ request.GET.sdate }}" id="sdate" name="sdate">
             <!--End Date Filter -->
-            <label for="edate" class="form-label" style="margin-top: 15px;">Filter by start date</label>
+            <label for="edate" class="form-label" style="margin-top: 15px;">Filter by end date</label>
             <input type="date" class="form-control" value="{{ request.GET.edate }}" id="edate" name="edate">
             <!--Status Filter -->
             <label for="status" style="margin-top: 10px;">Filter by status:</label>

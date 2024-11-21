@@ -381,10 +381,12 @@ def lease_contract_page(request):
     order_filter = request.GET.get('order')
 
     contracts = LeaseContract.objects.filter(room__in=rooms)
+    current_room = None
 
     if room_filter:
         room = Room.objects.get(pk=room_filter)
         condition["room"] = room
+        current_room = int(room_filter)
     if name_filter:
         condition["tenant__name__icontains"] = name_filter
     if start_filter:
@@ -408,8 +410,9 @@ def lease_contract_page(request):
     total_income = sum(contract.room.price * math.ceil((contract.lease_end - contract.lease_start).days/30) for contract in contracts)
     duration = 1
     if contracts.count() >=2 :
-        lease_order = contracts.order_by("lease_start")
-        duration = math.ceil((lease_order[lease_order.count()-1].lease_start - lease_order[0].lease_start).days / 30)
+        lease_start_order = contracts.order_by("lease_start")
+        lease_end_order = contracts.order_by("lease_end")
+        duration = math.ceil((lease_end_order[lease_end_order.count()-1].lease_end - lease_start_order[0].lease_start).days / 30)
 
     context = {
         "contracts": contracts.order_by(order_filter),
@@ -417,6 +420,7 @@ def lease_contract_page(request):
         "all_tenant": Tenant.objects.all().order_by("name"),
         "rooms": rooms,
         "num_contract": contracts.count(),
+        "current_room": current_room,
         "current_active": contracts.filter(lease_end__date__gt=timezone.now()).count(),
         "current_expired": contracts.filter(lease_end__date__lt=timezone.now()).count(),
         "today": timezone.now(),
@@ -506,8 +510,9 @@ def apartment_page(request):
     total_income = sum(contract.room.price * math.ceil((contract.lease_end - contract.lease_start).days / 30) for contract in contracts)
     duration = 1
     if contracts.count() >= 2:
-        lease_order = contracts.order_by("lease_start")
-        duration = math.ceil((lease_order[lease_order.count() - 1].lease_start - lease_order[0].lease_start).days / 30)
+        lease_start_order = contracts.order_by("lease_start")
+        lease_end_order = contracts.order_by("lease_end")
+        duration = math.ceil((lease_end_order[lease_end_order.count() - 1].lease_end - lease_start_order[0].lease_start).days / 30)
     income_per_month = total_income/duration
     context = {
         "outcome": outcome_per_month,

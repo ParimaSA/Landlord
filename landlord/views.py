@@ -367,7 +367,7 @@ def edit_parking(request, parking_id):
     return redirect("landlord:parking")
 
 
-@login_required()
+@login_required
 def lease_contract_page(request):
     condition ={}
     apartment = Apartment.objects.get(landlord=request.user)

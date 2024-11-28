@@ -12,6 +12,10 @@ def detail_page(request):
     return render(request, "landlord/home.html")
 
 
+def about_us_page(request):
+    return render(request, "landlord/about_us.html")
+
+
 @login_required
 def employee_page(request):
     condition = {}

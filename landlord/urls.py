@@ -5,11 +5,12 @@ from .views import (detail_page, employee_page, add_employee, delete_employee, e
                     room_page, add_room, delete_room, edit_room,
                     parking_page, add_parking, delete_parking, edit_parking,
                     lease_contract_page, add_lease_contract, delete_lease_contract, edit_lease_contract,
-                    apartment_page)
+                    apartment_page, about_us_page)
 
 app_name = "landlord"
 urlpatterns = [
     path("home/", detail_page, name="home"),
+    path("about-us/", about_us_page, name="about_us"),
     path("logout/", auth_views.LogoutView.as_view(), name='logout'),
     path("apartment/", apartment_page, name="apartment"),
     path("employee/", employee_page, name="employee"),

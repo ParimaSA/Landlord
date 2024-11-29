@@ -404,7 +404,7 @@ def lease_contract_page(request):
             condition["lease_end__date__lt"] = timezone.now()
 
     if not order_filter:
-        order_filter = "room"
+        order_filter = "room__number"
     if order_filter == "tenant":
         order_filter = "tenant__name"
 
